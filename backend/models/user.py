@@ -1,6 +1,8 @@
 from sqlmodel import SQLModel, Field, Relationship
 from datetime import Base
 from datetime import datetime
+from typing import Optional, List
+from .sale import Sale
 
 class User(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True)
