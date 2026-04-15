@@ -8,7 +8,7 @@ class Sale(BaseModel):
     updated_at:str
     ip_adress:str
     is_void:bool
-    user_id:int = Field(foreign_key="user,id")
+    user_id:int = Field(foreign_key="user.id")
     
 class SaleCreate(Sale):
     pass
