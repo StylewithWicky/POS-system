@@ -1,6 +1,7 @@
 from sqlmodel import SQLModel, Field, Relationship
 from datetime import datetime
 from typing import Optional,List, TYPE_CHECKING
+
 if TYPE_CHECKING:  
     from .user import User
     from models.salesitem import Saleitem

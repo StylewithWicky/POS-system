@@ -28,7 +28,7 @@ def seed_initial_data():
         Admin_full_name = os.getenv("full_name")
         Admin_role = os.getenv("role")
         
-        admin_user = session.exec(select(User).where(User.email == "admin")).first()
+        admin_user = session.exec(select(User).where(User.email == Admin_email)).first()
         if not admin_user:
             new_admin = User( 
                 

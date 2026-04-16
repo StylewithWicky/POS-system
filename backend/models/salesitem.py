@@ -1,8 +1,9 @@
 from sqlmodel import SQLModel, Field, Relationship
-from typing import List, Optional
+from typing import List, Optional,TYPE_CHECKING
 from datetime import datetime
-from .sale import Sale
-from .products import Product
+if TYPE_CHECKING:
+    from .sale import Sale
+    from .products import Product
 
 
 class Saleitem(SQLModel, table=True):
