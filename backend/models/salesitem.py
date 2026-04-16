@@ -14,5 +14,5 @@ class Saleitem(SQLModel, table=True):
     quantity: int
     price: float
     
-    sale: "Sale" = Relationship("Sale", back_populates="items")
-    product: "Product" = Relationship("Product", back_populates="sales")
+    sale: "Sale" = Relationship(back_populates="saleitems")
+    product: "Product" = Relationship( back_populates="sale_entries")

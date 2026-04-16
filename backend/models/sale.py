@@ -1,8 +1,9 @@
 from sqlmodel import SQLModel, Field, Relationship
 from datetime import datetime
-from typing import Optional,List
-from .user import User
-from .salesitem import Saleitem
+from typing import Optional,List, TYPE_CHECKING
+if TYPE_CHECKING:  
+    from .user import User
+    from models.salesitem import Saleitem
 
 class Sale(SQLModel, table=True):
     id:int = Field(default=None, primary_key=True)
@@ -14,5 +15,5 @@ class Sale(SQLModel, table=True):
     ip_address: str = Field(nullable=True)
     is_void: bool = Field(default=False)
     
-    user:User = Relationship("User", back_populates="sales")
-    items: List["SaleItem"] = Relationship("SaleItem", back_populates="sale")
+    user:User = Relationship( back_populates="sales")
+    saleitems: List["Saleitem"] = Relationship( back_populates="sale")

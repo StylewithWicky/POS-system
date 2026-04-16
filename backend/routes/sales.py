@@ -1,7 +1,8 @@
 from fastapi import Depends, HTTPException, status
 from typing import List
 from sqlmodel import Session, select
-from backend.models import sale, user
+from models.sale import Sale
+from models.user import User
 from models.salesitem import Saleitem
 from auth.deps import get_current_user
 from fastapi import APIRouter
@@ -20,7 +21,7 @@ def list_sales(db: Session = Depends(), current_user=Depends(get_current_user)):
     sale_entries = db.exec(select(Sale)).all()
     
     for item in sale_entries:
-        products = db.exec(select(Saleitem).where(Saleitem.sale_id == sale.id)).all()
+        products = db.exec(select(Saleitem).where(Saleitem.sale_id == 'sale.id')).all()
         
         if not products or products.quantity < item.quantity:
             raise HTTPException(status_code=400, detail="Insufficient stock for product")
@@ -34,7 +35,7 @@ def list_sales(db: Session = Depends(), current_user=Depends(get_current_user)):
         products.quantity -= item.quantity
         db.add(sales_item)
         
-        new_sale = Sale(total_amount=total, user_id=user.id, items=sale_entries)
+        new_sale = Sale(total_amount=total, user_id='user.id', items=sale_entries)
         db.add(new_sale)
         db.commit()
         db.refresh(new_sale)
