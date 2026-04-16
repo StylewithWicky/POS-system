@@ -1,20 +1,25 @@
-from pydantic import BaseModel,Field
+from pydantic import BaseModel, ConfigDict
 from typing import Optional 
 
-class Product(BaseModel):
-    name:str
-    sku:str 
-    price:float
-    stock:int
-    category:Optional[str]
+class ProductBase(BaseModel):
+    name: str
+    sku: str 
+    price: float
+    stock: int
+    category: Optional[str]
     
-class ProductCreate(Product):
+    model_config = ConfigDict(from_attributes=True)
+    
+class ProductCreate(ProductBase):
     pass
 
-class ProductUpdate(Product):
-    name:Optional[str] 
-    sku:Optional[str]
-    price:Optional[float]
-    stock:Optional[int]
-    category:Optional[str]
+class ProductSchema(ProductBase):
     
+    id: int
+    
+class ProductUpdate(ProductBase):
+    name: Optional[str]
+    sku: Optional[str] 
+    price: Optional[float]
+    stock: Optional[int]
+    category: Optional[str]

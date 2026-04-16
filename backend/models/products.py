@@ -10,4 +10,7 @@ class Product(SQLModel, table=True):
     price: float
     stock: int = Field(default=0)
     category: Optional[str] = Field(default=None, index=True)
-    sale_entries: List["Saleitem"] = Relationship( back_populates="product")
+    model_config = {
+        "arbitrary_types_allowed": True,
+    }
+    #sale_entries: List["Saleitem"] = Relationship( back_populates="product")

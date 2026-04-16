@@ -15,6 +15,10 @@ class Sale(SQLModel, table=True):
     updated_at: datetime = Field(default_factory=datetime.utcnow)
     ip_address: str = Field(nullable=True)
     is_void: bool = Field(default=False)
+    model_config = {
+        "arbitrary_types_allowed": True,
+    }
+    #user:User = Relationship( back_populates="sales")
+    #saleitems: List["Saleitem"] = Relationship( back_populates="sale")
     
-    user:User = Relationship( back_populates="sales")
-    saleitems: List["Saleitem"] = Relationship( back_populates="sale")
+

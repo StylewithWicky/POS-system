@@ -1,23 +1,19 @@
-from pydantic import BaseModel ,Field
+from pydantic import BaseModel, ConfigDict
 from typing import Optional
 
-class Sale(BaseModel):
-    timestamp:str
-    total_amount:float
-    created_at:str
-    updated_at:str
-    ip_adress:str
-    is_void:bool
-    user_id:int = Field(foreign_key="user.id")
+class SaleBase(BaseModel):
+    timestamp: str
+    total_amount: float
+    created_at: str
+    updated_at: str
+    ip_adress: str
+    is_void: bool
+    user_id: int 
     
-class SaleCreate(Sale):
+    model_config = ConfigDict(from_attributes=True)
+    
+class SaleCreate(SaleBase):
     pass
 
-class SaleUpdate(Sale):
-    timestamp:Optional[str]
-    total_amount:Optional[float]
-    created_at:Optional[str]
-    updated_at:Optional[str]
-    ip_adress:Optional[str]
-    is_void:Optional[bool]
-    user_id:Optional[int]
+class SaleSchema(SaleBase):
+    id: int

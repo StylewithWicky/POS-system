@@ -1,20 +1,23 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field,ConfigDict
 from typing import Optional
-from models.sale import Sale 
+from models.salesitem import Saleitem
 
-class Sale(BaseModel):
+class SaleItemSchema(BaseModel):
     unit_price:float
     quantity:int
     subtotal:float
     price:float
-    sale_id: int = Field(foreign_key="sale.id")
+    sale_id: int 
     
-class SalesCreate(Sale):
+    model_config=ConfigDict(from_attributes=True)
+class SalesCreate(SaleItemSchema):
     pass
 
-class SalesUpdate(Sale):
+class SalesUpdate(SaleItemSchema):
     unit_price:Optional[float]
-    quantity:Optional[float]
+    quantity:Optional[int]
     subtotal:Optional[float]
     price:Optional[float]
-    sale_id:Optional[float]
+    sale_id:Optional[int]
+class Config:
+        from_attributes = True

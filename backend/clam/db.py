@@ -56,6 +56,6 @@ def seed_initial_data():
         session.commit()
 
 def get_session():
-    """Dependency for FastAPI routes to handle DB sessions per request."""
+    ""
     with Session(engine) as session:
         yield session

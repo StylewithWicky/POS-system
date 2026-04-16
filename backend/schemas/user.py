@@ -1,17 +1,20 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import Optional 
 
-class User(BaseModel):
-    email:str 
-    password:str
-    name:str
-    role:Optional[str] = "cashier"
+class UserBase(BaseModel): # Rename from User to UserBase
+    email: str 
+    name: str
+    role: Optional[str] = "cashier"
     
-class UserCreate(User):
-    pass
+    model_config = ConfigDict(from_attributes=True)
+    
+class UserCreate(UserBase):
+    password: str # Only include password in Create, not in the Base/Response
 
-class UserUpdate(User):
-    email:Optional[str]
-    password:Optional[str]
-    name:Optional[str]
-    role:Optional[str]
+class UserSchema(UserBase):
+    id: int
+    
+class UserUpdate(UserBase):
+    email: Optional[str] 
+    name: Optional[str]
+    role: Optional[str] = "cashier"

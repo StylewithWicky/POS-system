@@ -1,42 +1,43 @@
-from fastapi import Depends, HTTPException, status
-from typing import List 
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select
-from models.products import Product
-from auth.deps import get_current_user
-from fastapi import APIRouter
+from typing import List
+from clam.db import get_session
+from models.products import Product as ProductModel
+from schemas.product import ProductSchema, ProductCreate, ProductUpdate
 
-router =APIRouter(prefix="/products", tags=["products"])
+router = APIRouter(prefix="/products", tags=["Products"])
 
-router.get("/", response_model=List[Product])
-def list_products(db: Session = Depends(), current_user=Depends(get_current_user)):
-    products = db.exec(select(Product)).all()
-    return products
+@router.post("/", response_model=ProductSchema, status_code=status.HTTP_201_CREATED)
+def create_product(product_data: ProductCreate, session: Session = Depends(get_session)):
+    db_product = ProductModel(**product_data.model_dump())
+    session.add(db_product)
+    session.commit()
+    session.refresh(db_product)
+    return db_product
 
-def get_product(product_id: int, db: Session):
-    product = db.exec(select(Product).where(Product.id == product_id)).first()
+@router.get("/", response_model=List[ProductSchema])
+def read_products(session: Session = Depends(get_session)):
+    return session.exec(select(ProductModel)).all()
+
+@router.get("/{product_id}", response_model=ProductSchema)
+def read_product(product_id: int, session: Session = Depends(get_session)):
+    product = session.get(ProductModel, product_id)
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
     return product
 
-def update_product_stock(product_id: int, quantity: int, db: Session):
-    product = get_product(product_id, db)
-    if product.stock < quantity:
-        raise HTTPException(status_code=400, detail="Insufficient stock")
-    product.stock -= quantity
-    db.add(product)
-    db.commit()
-    db.refresh(product)
-    return product
-
-def add_product(name: str, sku: str, price: float, stock: int, category: str, db: Session):
-    existing_product = db.exec(select(Product).where(Product.sku == sku)).first()
-    if existing_product:
-        raise HTTPException(status_code=400, detail="SKU already exists")
-    new_product = Product(name=name, sku=sku, price=price, stock=stock, category=category)
-    db.add(new_product)
-    db.commit()
-    db.refresh(new_product)
-    return new_product
-
-
+@router.patch("/{product_id}", response_model=ProductSchema)
+def update_product(product_id: int, product_update: ProductUpdate, session: Session = Depends(get_session)):
+    db_product = session.get(ProductModel, product_id)
+    if not db_product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    
+    update_data = product_update.model_dump(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(db_product, key, value)
+            
+    session.add(db_product)
+    session.commit()
+    session.refresh(db_product)
+    return db_product
 

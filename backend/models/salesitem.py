@@ -14,6 +14,9 @@ class Saleitem(SQLModel, table=True):
     subtotal: float
     quantity: int
     price: float
+    model_config = {
+        "arbitrary_types_allowed": True,
+    }
     
-    sale: "Sale" = Relationship(back_populates="saleitems")
-    product: "Product" = Relationship( back_populates="sale_entries")
+   # sale: "Sale" = Relationship(back_populates="saleitems")
+   # product: "Product" = Relationship( back_populates="sale_entries")

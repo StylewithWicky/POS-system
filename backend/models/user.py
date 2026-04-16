@@ -10,5 +10,8 @@ class User(SQLModel, table=True):
     email: str = Field(unique=True)
     hashed_password: str
     role: str = Field(default="cashier")
-    sales: list["Sale"] = Relationship( back_populates="user")
+    model_config = {
+        "arbitrary_types_allowed": True,
+    }
+   # sales: list["Sale"] = Relationship( back_populates="user")
     
